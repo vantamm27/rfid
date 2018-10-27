@@ -24,21 +24,27 @@ var (
 
 func Init() {
 	//dvs := hid.Enumerate(65535, 53) // one devivce
+
+	initHID()
+	err := initMQTT()
+	if err != nil {
+		log.Fatalln("myhid.initMQTT "+"Connect to mqtt falure ", err.Error())
+	}
+	ping()
+}
+
+func initHID() {
+	log.Println("initHID")
 	dvs := hid.Enumerate(0, 0)
 	for _, dv := range dvs {
 
 		if strings.Contains(strings.ToLower(dv.Product), config.Config.HID.DeviceType) && dv.Interface == 0 {
 			log.Printf("myhid.initMQTT "+"%+v", dv)
 			log.Println("myhid.initMQTT >>>" + "open device")
+
 			go readData(dv)
 		}
 	}
-
-	err := initMQTT()
-	if err != nil {
-		log.Fatalln("myhid.initMQTT "+"Connect to mqtt falure ", err.Error())
-	}
-	ping()
 }
 
 func Close() {
@@ -139,7 +145,9 @@ func ping() {
 				log.Println("pub data to mqtt err", err.Error())
 
 			}
+			if len(deviceList) <= 0 {
+				initHID()
+			}
 		}
-
 	}
 }
