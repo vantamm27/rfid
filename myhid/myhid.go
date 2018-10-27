@@ -140,6 +140,9 @@ func ping() {
 		select {
 		case <-tickChan:
 			log.Println("myhid.ping ")
+			if mqttClient == nil {
+				log.Fatalln("mqttClient is null")
+			}
 			err := mqttClient.Publish(config.Config.Mqtt.Ping, config.Config.Mqtt.Qos, config.Config.Mqtt.Retained, []byte(config.Config.AppName))
 			if err != nil {
 				log.Println("pub data to mqtt err", err.Error())
