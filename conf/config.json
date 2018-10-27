@@ -1,15 +1,22 @@
 {  
-	"app":"RFID",
+   "app":"RFID-01",
    "mqtt":{  
       "url":"tcp://172.17.0.1:1883",
-      "topic":"ping",
-	"qos":1,
-	"retained": false
+      "topic":"report",
+	  "ping":"ping",
+	  "qos":1,
+	  "retained": false
 	
    },
 	"hid":{
 		"datalen":10,
 		"deviceType":"reader"
+	},	
+	"log":{
+		"path":"./logs/system.log",
+		"size":1,
+		"age":10,
+		"backup":10
 	}
 }
 

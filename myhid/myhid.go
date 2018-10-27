@@ -7,6 +7,7 @@ import (
 	"rfid/config"
 	"rfid/mqtt"
 	"strings"
+	"time"
 
 	"github.com/karalabe/hid"
 )
@@ -37,6 +38,7 @@ func Init() {
 	if err != nil {
 		log.Fatalln("myhid.initMQTT "+"Connect to mqtt falure ", err.Error())
 	}
+	ping()
 }
 
 func Close() {
@@ -123,5 +125,21 @@ func process(data string) {
 	if err != nil {
 		log.Println("pub data to mqtt err", err.Error())
 		return
+	}
+}
+
+func ping() {
+	tickChan := time.NewTicker(3 * time.Second).C
+	for {
+		select {
+		case <-tickChan:
+			log.Println("myhid.ping ")
+			err := mqttClient.Publish(config.Config.Mqtt.Ping, config.Config.Mqtt.Qos, config.Config.Mqtt.Retained, []byte(config.Config.AppName))
+			if err != nil {
+				log.Println("pub data to mqtt err", err.Error())
+
+			}
+		}
+
 	}
 }

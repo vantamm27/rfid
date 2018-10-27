@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+
 	"rfid/common"
 	"rfid/config"
 	"rfid/myhid"
@@ -16,7 +17,6 @@ const (
 )
 
 func main() {
-
 	config.Init(ConfigFile)
 	common.InitMap()
 	myhid.Init()
