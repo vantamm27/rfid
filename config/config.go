@@ -13,8 +13,13 @@ import (
 type CONFIG struct {
 	AppName string     `json:"app"`
 	Mqtt    MQTTCONFIG `json:"mqtt"`
+	Http    Http       `json:"http"`
 	HID     HIDCONFIG  `json:"hid"`
 	Log     LOG        `json:"log"`
+}
+
+type Http struct {
+	Url string `json:"url"`
 }
 
 type MQTTCONFIG struct {

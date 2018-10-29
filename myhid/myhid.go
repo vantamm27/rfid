@@ -1,7 +1,12 @@
 package myhid
 
 import (
+	//"encoding/json"
+	//	"errors"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"rfid/common"
 	"rfid/common/utility"
 	"rfid/config"
@@ -26,11 +31,13 @@ func Init() {
 	//dvs := hid.Enumerate(65535, 53) // one devivce
 
 	initHID()
-	err := initMQTT()
-	if err != nil {
-		log.Fatalln("myhid.initMQTT "+"Connect to mqtt falure ", err.Error())
-	}
-	ping()
+	/*
+		err := initMQTT()
+		if err != nil {
+			log.Fatalln("myhid.initMQTT "+"Connect to mqtt falure ", err.Error())
+		}
+		ping()
+	*/
 }
 
 func initHID() {
@@ -127,11 +134,18 @@ func initMQTT() error {
 
 func process(data string) {
 	log.Println("myhid.process " + data)
-	err := mqttClient.Publish(config.Config.Mqtt.Topic, config.Config.Mqtt.Qos, config.Config.Mqtt.Retained, []byte(data))
+
+	url := config.Config.Http.Url + "?card=" + data
+	resp := HttpGet(url)
+
+	log.Println(string(resp))
+
+	/*err := mqttClient.Publish(config.Config.Mqtt.Topic, config.Config.Mqtt.Qos, config.Config.Mqtt.Retained, []byte(data))
 	if err != nil {
 		log.Println("pub data to mqtt err", err.Error())
 		return
 	}
+	*/
 }
 
 func ping() {
@@ -153,4 +167,26 @@ func ping() {
 			}
 		}
 	}
+}
+
+func HttpGet(url string) []byte {
+
+	fmt.Println("===========================")
+	req, err := http.NewRequest("GET", url, nil)
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	client.Timeout = time.Second * 1
+	resp, err := client.Do(req)
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("response Status:", resp.Status)
+	fmt.Println("response Headers:", resp.Header)
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("respon " + string(body))
+	return body
+
 }

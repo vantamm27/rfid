@@ -8,6 +8,9 @@
 	  "retained": false
 	
    },
+	"http":{  
+      "url":"http://172.17.0.1:8181"	
+   },
 	"hid":{
 		"datalen":10,
 		"deviceType":"reader"
