@@ -1,13 +1,5 @@
 {  
-   "app":"RFID-01",
-   "mqtt":{  
-      "url":"tcp://172.17.0.1:1883",
-      "topic":"report",
-	  "ping":"ping",
-	  "qos":1,
-	  "retained": false
-	
-   },
+   "app":"RFID-01",   
 	"http":{  
       "url":"http://172.17.0.1:8181"	
    },

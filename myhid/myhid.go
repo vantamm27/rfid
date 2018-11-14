@@ -135,7 +135,8 @@ func initMQTT() error {
 func process(data string) {
 	log.Println("myhid.process " + data)
 
-	url := config.Config.Http.Url + "?card=" + data
+	url := config.Config.Http.Url + "/access?p=" + data
+	log.Println(url)
 	resp := HttpGet(url)
 
 	log.Println(string(resp))
@@ -148,6 +149,7 @@ func process(data string) {
 	*/
 }
 
+/*
 func ping() {
 	tickChan := time.NewTicker(3 * time.Second).C
 	for {
@@ -168,6 +170,7 @@ func ping() {
 		}
 	}
 }
+*/
 
 func HttpGet(url string) []byte {
 
